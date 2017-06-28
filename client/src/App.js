@@ -18,7 +18,7 @@ class App extends Component {
     fetch('/api/history')
       .then(res => res.json())
       .then(data => this.setState({data: data}, function(){
-        window.fillChart(this.state.data.allValues, this.state.data.allDates, 2);
+        window.fillChart(this.state.data.allValues, this.state.data.allDates, 0);
       }));
 
   }
@@ -29,6 +29,7 @@ class App extends Component {
     return (
       <div className = "content">
         <MultiplierForm />
+        <br />
         <div className = "chart-container">
           <canvas id="myChart"></canvas>
         </div>

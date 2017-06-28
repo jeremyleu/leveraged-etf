@@ -1,6 +1,7 @@
 * {
   margin: 0;
   padding: 0;
+  font-family: 'Roboto', sans-serif;
 }
 
 .chart-container {
@@ -12,4 +13,8 @@
 .content {
   padding: 10vh 10vw;
   width: 100%;
+}
+
+.multiplierForm {
+  max-width: 300px;
 }

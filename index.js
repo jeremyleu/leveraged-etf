@@ -58,11 +58,17 @@ app.get('/api/history', (req, res) => {
 
 });
 
+app.use('/js', express.static(__dirname + '/client/node_modules/bootstrap/dist/js')); // redirect bootstrap JS
+app.use('/js', express.static(__dirname + '/client/node_modules/jquery/dist')); // redirect JS jQuery
+app.use('/css', express.static(__dirname + '/client/node_modules/bootstrap/dist/css')); // redirect CSS bootstrap
+
 // The "catchall" handler: for any request that doesn't
 // match one above, send back React's index.html file.
 app.get('*', (req, res) => {
   res.sendFile(path.join(__dirname+'/client/build/index.html'));
 });
+
+
 
 const port = process.env.PORT || 5000;
 app.listen(port);

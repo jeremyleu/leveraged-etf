@@ -1,8 +1,10 @@
 var Chart = require('chart.js');
+var bootstrap = require('bootstrap');
 
 window.fillChart = function(data, labels, multiplier) {
   var ctx = document.getElementById("myChart").getContext('2d');
   Chart.defaults.global.maintainAspectRatio = false;
+  Chart.defaults.global.defaultFontFamily = 'Roboto';
 
   var datasets = [];
 
@@ -13,7 +15,7 @@ window.fillChart = function(data, labels, multiplier) {
       fill: false
   });
 
-  if(multiplier){
+  if(multiplier > 0){
     var changes = [];
     for(var i = 0; i < data.length - 1; i++) {
       changes.push((data[i + 1] - data[i])/data[i]);
@@ -24,7 +26,7 @@ window.fillChart = function(data, labels, multiplier) {
       newdata.push(newdata[i] * (1 + (changes[i] * multiplier)));
     }
     datasets.push({
-      label: '^GSPC ' + multiplier + 'X ETF',
+      label: '^GSPC ' + multiplier + 'X ETF (Simulated)',
       data: newdata,
       borderWidth: 1,
       fill: false,
