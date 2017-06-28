@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import MultiplierForm from './MultiplierForm';
 import './App.css';
 
 class App extends Component {
@@ -27,10 +28,12 @@ class App extends Component {
 
     return (
       <div className = "content">
+        <MultiplierForm />
         <div className = "chart-container">
           <canvas id="myChart"></canvas>
         </div>
       </div>
+
       //<div className="App">
         //{/* Render the passwords if we have them */}
         //{JSON.stringify(closeValues)}
