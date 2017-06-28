@@ -1,6 +1,8 @@
 const express = require('express');
 const path = require('path');
 const request = require('request');
+const datesBefore2000 = require('./resources/datesbefore2000.json');
+const valuesBefore2000 = require('./resources/valuesbefore2000.json')
 
 const app = express();
 
@@ -22,7 +24,7 @@ app.use(express.static(path.join(__dirname, 'client/build')));
   console.log(`Sent ${count} passwords`);
 });*/
 
-app.get('/indexHistory', (req, res) => {
+app.get('/api/history', (req, res) => {
   /*var xhttp = new XMLHttpRequest();
   xhttp.open("GET", "", false);
   xhttp.setRequestHeader("Content-type", "application/json");
@@ -31,18 +33,24 @@ app.get('/indexHistory', (req, res) => {
   request('https://www.alphavantage.co/query?function=TIME_SERIES_DAILY&symbol=^GSPC&outputsize=full&apikey=7C3E6JIIQGJJI4B9', function (error, response, body) {
     console.log('error:', error); // Print the error if one occurred
     console.log('statusCode:', response && response.statusCode); // Print the response status code if a response was received
-    if(response && response.statusCode == 200) {
+    if(response && response.statusCode == 200 && body && Object.keys(body).length > 0) {
+      //console.log(body);
       var timeSeries = JSON.parse(body)["Time Series (Daily)"];
+      //console.log(timeSeries);
       var dateStrings = Object.keys(timeSeries).sort();
       var closeValues = [];
-      function pair(date, closeValue) {
+      /*function pair(date, closeValue) {
         this.date = date;
         this.closeValue = closeValue;
-      }
+      }*/
       for(var i = 0; i < dateStrings.length; i++) {
-        closeValues.push(new pair(dateStrings[i], timeSeries[dateStrings[i]]["4. close"]));
+        closeValues.push(timeSeries[dateStrings[i]]["4. close"]);
       }
-      res.json(closeValues);
+      var allDates = datesBefore2000.concat(dateStrings);
+      var allValues = valuesBefore2000.concat(closeValues);
+      console.log(allDates.length);
+      console.log(allValues.length);
+      res.json({allDates, allValues});
     }
     //console.log('body:', body); // Print the HTML for the Google homepage.
   });
