@@ -8,12 +8,12 @@ class App extends Component {
 
   // Fetch passwords after first mount
   componentDidMount() {
-    this.getCloseValues();
+    //this.getCloseValues();
     //console.log(this.state);
     //window.fillChart(this.state.data.closeValues, this.state.data.labels);
   }
 
-  getCloseValues = () => {
+  /*getCloseValues = () => {
     // Get the passwords and store them in state
     fetch('/api/history')
       .then(res => res.json())
@@ -21,7 +21,7 @@ class App extends Component {
         window.fillChart(this.state.data.allValues, this.state.data.allDates, 0);
       }));
 
-  }
+  }*/
 
   render() {
     const { closeValues, labels } = this.state;
