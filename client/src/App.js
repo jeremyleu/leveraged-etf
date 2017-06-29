@@ -24,10 +24,10 @@ class App extends Component {
   }*/
 
   render() {
-    const { closeValues, labels } = this.state;
 
     return (
       <div className = "content">
+
         <MultiplierForm />
         <br />
         <div className = "chart-container">
