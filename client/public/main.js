@@ -5,7 +5,7 @@ moment().format();
 
 var myChart;
 
-window.fillChart = function(data, labels, multiplier, start, end) {
+window.fillChart = function(data, labels, multiplierSet, start, end) {
   if(myChart)
     myChart.destroy();
   var ctx = document.getElementById("myChart").getContext('2d');
@@ -15,22 +15,22 @@ window.fillChart = function(data, labels, multiplier, start, end) {
   var datasets = [];
   window.flag = false;
   window.error = null;
-  window.multiplier = multiplier;
+  //window.multiplier = multiplier;
 
-  var startIndex = labels.indexOf(moment(start).format('YYYY-MM-DD'));
-  var endIndex = labels.indexOf(moment(end).format('YYYY-MM-DD'));
+  var startIndex = labels.indexOf(moment(start, "YYYY MM DD").format('YYYY-MM-DD'));
+  var endIndex = labels.indexOf(moment(end, "YYYY MM DD").format('YYYY-MM-DD'));
 
   while(startIndex === -1){
-    start = moment(start).add(1, 'days');
+    start = moment(start, "YYYY MM DD").add(1, 'days');
     startIndex = labels.indexOf(start.format('YYYY-MM-DD'));
-    if(moment(start).isAfter(moment())) {
+    if(moment(start, "YYYY MM DD").isAfter(moment())) {
       window.error = "There is no data for the chosen start date, so the default start date was chosen. Please choose an earlier start date.";
       startIndex = 0;
     }
   }
 
   while(endIndex === -1){
-    end = moment(end).subtract(1, 'days');
+    end = moment(end, "YYYY MM DD").subtract(1, 'days');
     endIndex = labels.indexOf(end.format('YYYY-MM-DD'));
   }
 
@@ -44,7 +44,11 @@ window.fillChart = function(data, labels, multiplier, start, end) {
       fill: false
   });
 
-  if(multiplier > 0){
+  var colorIndex = 0;
+
+  for(let multString of multiplierSet){
+    var multiplier = Number(multString);
+    console.log(multiplier);
     var changes = [];
     for(var i = 0; i < data.length - 1; i++) {
       changes.push((data[i + 1] - data[i])/data[i]);
@@ -71,7 +75,7 @@ window.fillChart = function(data, labels, multiplier, start, end) {
       data: newdata,
       borderWidth: 1,
       fill: false,
-      borderColor: '#9999FF'
+      borderColor: window.getRandomColor()
     });
   }
 
@@ -100,6 +104,15 @@ window.fillChart = function(data, labels, multiplier, start, end) {
         }
       }
   });
+}
+
+window.getRandomColor = function() {
+  var letters = '0123456789ABCDEF';
+  var color = '#';
+  for (var i = 0; i < 6; i++) {
+    color += letters[Math.floor(Math.random() * 16)];
+  }
+  return color;
 }
 
 $(function(){

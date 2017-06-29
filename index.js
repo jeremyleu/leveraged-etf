@@ -23,7 +23,7 @@ app.use(express.static(path.join(__dirname, 'client/build')));
 
   console.log(`Sent ${count} passwords`);
 });*/
-
+var timeSeries;
 app.get('/api/history', (req, res) => {
   /*var xhttp = new XMLHttpRequest();
   xhttp.open("GET", "", false);
@@ -35,7 +35,8 @@ app.get('/api/history', (req, res) => {
     console.log('statusCode:', response && response.statusCode); // Print the response status code if a response was received
     if(response && response.statusCode == 200 && body && Object.keys(body).length > 0) {
       //console.log(body);
-      var timeSeries = JSON.parse(body)["Time Series (Daily)"];
+      if(JSON.parse(body)["Time Series (Daily)"])
+        timeSeries = JSON.parse(body)["Time Series (Daily)"];
       //console.log(timeSeries);
       var dateStrings = Object.keys(timeSeries).sort();
       var closeValues = [];
@@ -48,8 +49,6 @@ app.get('/api/history', (req, res) => {
       }
       var allDates = datesBefore2000.concat(dateStrings);
       var allValues = valuesBefore2000.concat(closeValues);
-      console.log(allDates.length);
-      console.log(allValues.length);
       res.json({allDates, allValues});
     }
     //console.log('body:', body); // Print the HTML for the Google homepage.

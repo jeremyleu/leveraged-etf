@@ -8,6 +8,8 @@ class MultiplierForm extends React.Component {
     super(props);
     this.state = {
       multiplier: '2',
+      multiplierSet: new Set(),
+      multipliers: [],
       startMonth: '1',
       startDate: '2',
       startYear: '1986',
@@ -19,11 +21,46 @@ class MultiplierForm extends React.Component {
       data: {},
       loading: false,
       multiplierError: null,
-      dateError: null
+      dateError: null,
+      multiplierAddError: null
     };
 
     this.handleChange = this.handleChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
+    this.handleClick = this.handleClick.bind(this);
+  }
+
+  handleClick(event) {
+    var target = event.target;
+
+    if(target.name === "addMultiplier"){
+      this.setState(function(prevState, props){
+        var newMultiplierSet = prevState.multiplierSet;
+        var multiplierAddError = null;
+        if(newMultiplierSet.has(this.state.multiplier))
+          multiplierAddError = "That multiplier has already been added."
+        else
+          newMultiplierSet.add(this.state.multiplier);
+        var multipliers = [];
+        for(let mult of newMultiplierSet.values()){
+          console.log(mult);
+          multipliers.push(<button name = {mult} key = {mult} className="list-group-item list-group-item-action" onClick={this.handleClick}>{mult}</button>);
+        }
+        return {multiplier: '', multiplierSet: newMultiplierSet, multiplierAddError: multiplierAddError, multipliers: multipliers};
+      });
+    }
+    else{
+      this.setState(function(prevState, props){
+        var newMultiplierSet = prevState.multiplierSet;
+
+        newMultiplierSet.delete(target.name);
+        var multipliers = [];
+        for(let mult of newMultiplierSet.values()){
+          multipliers.push(<button name = {mult} key = {mult} className="list-group-item list-group-item-action" onClick={this.handleClick}>{mult}</button>);
+        }
+        return {multiplier: '', multiplierSet: newMultiplierSet, multipliers: multipliers};
+      });
+    }
   }
 
   handleChange(event) {
@@ -50,11 +87,12 @@ class MultiplierForm extends React.Component {
 
   handleSubmit(event) {
     event.preventDefault();
-    this.setState({loading: true});
+    this.setState({loading: true, multiplierAddError: null, multiplier: ''});
     fetch('/api/history')
       .then(res => res.json())
       .then(data => this.setState({data: data}, function(){
-        window.fillChart(this.state.data.allValues, this.state.data.allDates, this.state.multiplier, this.state.start, this.state.end);
+        console.log(this.state.multiplierSet);
+        window.fillChart(this.state.data.allValues, this.state.data.allDates, this.state.multiplierSet, this.state.start, this.state.end);
         this.setState({loading: false});
         if(window.error) {
           this.setState({
@@ -118,6 +156,7 @@ class MultiplierForm extends React.Component {
                 Multiplier (1 - 5):
               </label>
               <input type="text" className="form-control" id="multiplier-input" name = "multiplier" value={this.state.multiplier} onChange={this.handleChange} />
+              {this.state.multiplierError ? <button className="button btn btn-default" name = "addMultiplier" type = "button" onClick = {this.handleClick} disabled>Add</button> : <button className="button btn btn-default" name = "addMultiplier" type = "button"  onClick = {this.handleClick}>Add</button>}
             </div>
             <div className = "form-group">
               <label htmlFor = "multiplier-input">
@@ -148,16 +187,21 @@ class MultiplierForm extends React.Component {
               </select>
             </div>
             <div className = "form-group">
-              {this.state.dateError || this.state.multiplierError ? <input type="submit" className="button btn btn-default" value="Submit" disabled/> : <input type="submit" className="button btn btn-default" value="Submit" />}
+              {this.state.dateError ? <input type="submit" className="button btn btn-default" value="Submit" disabled/> : <input type="submit" className="button btn btn-default" value="Submit" />}
             </div>
 
           </div>
         </form>
         <br />
-        {window.flag ? <div className="alert alert-info" role="alert">On {window.date}, the S&P 500 closed at {Math.round(window.change * 10000)/100}%, so a hypothetical {window.multiplier}X ETF would lose all its value.</div> : null}
+        {window.flag ? <div className="alert alert-info" role="alert">On {window.date}, the S&P 500 closed at {Math.round(window.change * 10000)/100}%, so at least one of the ETFs shown would lose all its value.</div> : null}
         {window.error ? <div className="alert alert-info" role="alert">{window.error}</div> : null}
+        {this.state.multiplierAddError ? <div className="alert alert-warning" role="alert">{this.state.multiplierAddError}</div> : null}
         {this.state.dateError || this.state.multiplierError ? <div className="alert alert-danger" role="alert">{this.state.multiplierError} {this.state.dateError}</div> : null}
-        {this.state.loading ? <div className="alert alert-info" role="alert">Loading...</div> : null}
+        {this.state.loading ? <div className="alert alert-info" role="alert">Loading...</div> : null} <br />
+        {this.state.multipliers.length ? <div className = "multiplierListTitle"><strong>Current Multipliers:</strong></div> : null}
+        <div className = "list-group">
+          {this.state.multipliers}
+        </div>
       </div>
     );
   }

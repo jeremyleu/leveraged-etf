@@ -21,3 +21,11 @@ input, label, select {
 .form-group {
   margin-right: 1em;
 }
+
+.list-group {
+  max-width: 200px;
+}
+
+.multiplierListTitle {
+  margin-bottom: 0.5em;
+}
