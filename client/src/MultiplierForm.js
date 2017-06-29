@@ -32,8 +32,6 @@ class MultiplierForm extends React.Component {
     //this.setState({error: null});
     this.setState({[target.name]: target.value}, function(){
       this.setState({start: this.state.startYear + ' ' + this.state.startMonth + ' ' + this.state.startDate, end: this.state.endYear + ' ' + this.state.endMonth + ' ' + this.state.endDate}, function(){
-        console.log("start: " + this.state.start);
-        console.log("end: " + this.state.end);
         if(target.name === "multiplier") {
           if(isNaN(target.value) || target.value < 1 || target.value > 5)
             this.setState({multiplierError: "Only positive numbers between 1 and 5 are valid."});
@@ -59,6 +57,13 @@ class MultiplierForm extends React.Component {
       .then(data => this.setState({data: data}, function(){
         window.fillChart(this.state.data.allValues, this.state.data.allDates, this.state.multiplier, this.state.start, this.state.end);
         this.setState({loading: false});
+        if(window.error) {
+          this.setState({
+            startMonth: '1',
+            startDate: '2',
+            startYear: '1986'
+          });
+        }
       }));
   }
 
@@ -78,7 +83,20 @@ class MultiplierForm extends React.Component {
       else
         days[i] = 31;
     }
-    console.log(days[0]);
+    var monthsArray = [
+      <option value = "1" key = "1">January</option>,
+      <option value = "2" key = "2">February</option>,
+      <option value = "3" key = "3">March</option>,
+      <option value = "4" key = "4">April</option>,
+      <option value = "5" key = "5">May</option>,
+      <option value = "6" key = "6">June</option>,
+      <option value = "7" key = "7">July</option>,
+      <option value = "8" key = "8">August</option>,
+      <option value = "9" key = "9">September</option>,
+      <option value = "10" key = "10">October</option>,
+      <option value = "11" key = "11">November</option>,
+      <option value = "12" key = "12">December</option>
+    ];
     var selectOptionsArrays = [];
     for(var i1 = 0; i1 < days.length; i1++) {
       var selectOptionsArray = [];
@@ -106,18 +124,7 @@ class MultiplierForm extends React.Component {
                 Start Date:
               </label>
               <select className="form-control" name = "startMonth" onChange = {this.handleChange} value = {this.state.startMonth}>
-                <option value = "1">January</option>
-                <option value = "2">February</option>
-                <option value = "3">March</option>
-                <option value = "4">April</option>
-                <option value = "5">May</option>
-                <option value = "6">June</option>
-                <option value = "7">July</option>
-                <option value = "8">August</option>
-                <option value = "9">September</option>
-                <option value = "10">October</option>
-                <option value = "11">November</option>
-                <option value = "12">December</option>
+                {monthsArray}
               </select>
               <select className="form-control" name = "startDate" onChange = {this.handleChange} value = {this.state.startDate}>
                 {selectOptionsArrays[0]}
@@ -131,18 +138,7 @@ class MultiplierForm extends React.Component {
                 End Date:
               </label>
               <select className="form-control" name = "endMonth" onChange = {this.handleChange} value = {this.state.endMonth}>
-                <option value = "1">January</option>
-                <option value = "2">February</option>
-                <option value = "3">March</option>
-                <option value = "4">April</option>
-                <option value = "5">May</option>
-                <option value = "6">June</option>
-                <option value = "7">July</option>
-                <option value = "8">August</option>
-                <option value = "9">September</option>
-                <option value = "10">October</option>
-                <option value = "11">November</option>
-                <option value = "12">December</option>
+                {monthsArray}
               </select>
               <select className="form-control" name = "endDate" onChange = {this.handleChange} value = {this.state.endDate}>
                 {selectOptionsArrays[0]}
@@ -159,6 +155,7 @@ class MultiplierForm extends React.Component {
         </form>
         <br />
         {window.flag ? <div className="alert alert-info" role="alert">On {window.date}, the S&P 500 closed at {Math.round(window.change * 10000)/100}%, so a hypothetical {window.multiplier}X ETF would lose all its value.</div> : null}
+        {window.error ? <div className="alert alert-info" role="alert">{window.error}</div> : null}
         {this.state.dateError || this.state.multiplierError ? <div className="alert alert-danger" role="alert">{this.state.multiplierError} {this.state.dateError}</div> : null}
         {this.state.loading ? <div className="alert alert-info" role="alert">Loading...</div> : null}
       </div>

@@ -19618,6 +19618,10 @@ window.fillChart = function(data, labels, multiplier, start, end) {
   while(startIndex === -1){
     start = moment(start).add(1, 'days');
     startIndex = labels.indexOf(start.format('YYYY-MM-DD'));
+    if(moment(start).isAfter(moment())) {
+      window.error = "There is no data for the chosen start date, so the default start date was chosen. Please choose an earlier start date.";
+      startIndex = 0;
+    }
   }
 
   while(endIndex === -1){
