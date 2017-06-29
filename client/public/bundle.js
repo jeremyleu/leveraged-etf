@@ -19610,6 +19610,7 @@ window.fillChart = function(data, labels, multiplier, start, end) {
 
   var datasets = [];
   window.flag = false;
+  window.error = null;
   window.multiplier = multiplier;
 
   var startIndex = labels.indexOf(moment(start).format('YYYY-MM-DD'));
