@@ -6,17 +6,16 @@ moment().format();
 class MultiplierForm extends React.Component {
   constructor(props) {
     super(props);
-    var currentDate = new Date();
     this.state = {
-      multiplier: '',
+      multiplier: '2',
       startMonth: '1',
       startDate: '2',
       startYear: '1986',
-      start: '',
-      endMonth: '' + (currentDate.getMonth() + 1),
-      endDate: '' + currentDate.getDate(),
-      endYear: '' + currentDate.getFullYear(),
-      end: '',
+      start: '1986 1 2',
+      endMonth: '' + (moment().month() + 1),
+      endDate: '' + moment().date(),
+      endYear: '' + moment().year(),
+      end: moment().format('YYYY MM DD'),
       data: {},
       loading: false,
       multiplierError: null,
@@ -61,7 +60,8 @@ class MultiplierForm extends React.Component {
           this.setState({
             startMonth: '1',
             startDate: '2',
-            startYear: '1986'
+            startYear: '1986',
+            start: '1986 1 2'
           });
         }
       }));
