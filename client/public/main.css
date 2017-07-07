@@ -2,10 +2,20 @@
   font-family: 'Roboto', sans-serif;
 }
 
+
+
 .chart-container {
   position: relative;
-  width: 80vw;
+  margin-top: 5%;
   height: 80vh;
+}
+
+#myChart {
+  height: 100%;
+}
+
+.multiplier-checkbox {
+  margin-right: 4px !important;
 }
 
 .content {
@@ -28,4 +38,55 @@ input, label, select {
 
 .multiplierListTitle {
   margin-bottom: 0.5em;
+}
+
+.multiplier-form-container {
+  width: 400px;
+  z-index: 1;
+  position: absolute;
+  left: 0;
+  top: 10%;
+  padding: 30px;
+  border-radius: 30px;
+  background-color: #eeeeee;
+  margin: 30px;
+}
+
+.content-container {
+  padding-left: 435px;
+  z-index: 0;
+}
+
+
+
+.month-container {
+  padding-right: 3px;
+}
+
+.date-container {
+  padding-left: 3px;
+  padding-right: 3px;
+}
+
+.year-container {
+  padding-left: 3px;
+}
+
+.multiplier-form .form-label {
+  font-weight: 700;
+  text-transform: uppercase;
+  margin-left: -5px;
+  margin-bottom: 6px;
+}
+
+.multiplier-form label {
+  font-weight: 400;
+}
+
+.multiplier-form h1 {
+  font-weight: 700;
+}
+
+.multiplier-form hr {
+  border-color: #333;
 }

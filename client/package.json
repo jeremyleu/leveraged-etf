@@ -5,6 +5,7 @@
   "dependencies": {
     "bootstrap": "^3.3.7",
     "chart.js": "^2.6.0",
+    "highcharts": "^5.0.12",
     "jquery": "^3.2.1",
     "react": "^15.6.1",
     "react-dom": "^15.6.1"

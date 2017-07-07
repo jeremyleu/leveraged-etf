@@ -11,6 +11,8 @@
   "license": "ISC",
   "dependencies": {
     "express": "^4.15.3",
-    "request": "^2.81.0"
+    "google-finance": "^0.1.9",
+    "request": "^2.81.0",
+    "yahoo-finance": "^0.3.2"
   }
 }

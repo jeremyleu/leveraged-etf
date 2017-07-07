@@ -26,12 +26,15 @@ class App extends Component {
   render() {
 
     return (
-      <div className = "content">
-
-        <MultiplierForm />
-        <br />
-        <div className = "chart-container">
-          <canvas id="myChart"></canvas>
+      <div className = "container-fluid">
+        <div className = "content-container">
+          <div className = "multiplier-form-container">
+            <MultiplierForm />
+          </div>
+          <br />
+          <div className = "chart-container">
+            <div id="myChart"></div>
+          </div>
         </div>
       </div>
 
