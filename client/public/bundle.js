@@ -7378,8 +7378,23 @@ moment().format();
 
 var myChart;
 
-window.fillChart = function(data, multiplierSet, axis, symbol) {
+window.fillChart = function(data, multiplierSet, axis, symbol, start, end, initialInvestment) {
 
+  let selectedData = [];
+  let started = false;
+  let numShares = 0;
+  for(let i = 0; i < data.length; i++) {
+    if(parseInt(moment(start, "YYYY-MM-DD").format("x"), 10) <= data[i][0] && parseInt(moment(end, "YYYY-MM-DD").format("x"), 10) >= data[i][0]) {
+
+      if(!started){
+        started = true;
+        numShares = Number(initialInvestment/data[i][1]);
+      }
+      selectedData.push([data[i][0], data[i][1] * numShares]);
+    }
+  }
+
+  data = selectedData;
 
   let series = [{
       name: symbol,
@@ -7392,15 +7407,8 @@ window.fillChart = function(data, multiplierSet, axis, symbol) {
   for(let multString of multiplierSet){
     let multiplier = Number(multString);
     let changes = [];
-    for(let i = 0; i < data.length - 1; i++) {
+    for(let i = 0; i < data.length - 1; i++)
       changes.push([data[i][0], (data[i + 1][1] - data[i][1])/data[i][1]]);
-      if((data[i + 1][1] - data[i][1])/data[i][1] <= -1 || (data[i + 1][1] - data[i][1])/data[i][1] >= 1) {
-        console.log("HELP " + (data[i + 1][1] - data[i][1])/data[i][1]);
-        console.log("data[i+1][1]: " + data[i+1][1]);
-        console.log("data[i][1]: " + data[i][1]);
-      }
-    }
-    console.log(changes);
     let newdata = [];
     newdata.push(data[0]);
     for(let i = 0; i < changes.length; i++) {
@@ -7411,8 +7419,7 @@ window.fillChart = function(data, multiplierSet, axis, symbol) {
         else {
           newdata.push([data[i + 1][0], 0]);
           window.flag = true;
-          console.log(data[i][0]);
-          console.log(changes[i][1]);
+
         }
       }
       else
@@ -7434,7 +7441,12 @@ window.fillChart = function(data, multiplierSet, axis, symbol) {
 
   Highcharts.stockChart('myChart', {
         rangeSelector: {
-            selected: 5
+            inputEnabled: false,
+            enabled: false
+        },
+
+        navigator: {
+          enabled: false
         },
 
         title: {

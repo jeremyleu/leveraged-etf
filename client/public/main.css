@@ -90,3 +90,8 @@ input, label, select {
 .multiplier-form hr {
   border-color: #333;
 }
+
+.date-select div {
+  padding-left: 5px;
+  padding-right: 5px;
+}
