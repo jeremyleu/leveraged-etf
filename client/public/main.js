@@ -10,8 +10,13 @@ window.fillChart = function(data, multiplierSet, axis, symbol, start, end, initi
   let selectedData = [];
   let started = false;
   let numShares = 0;
+  let averageGrowthRates = [];
+  let startDate = moment(start, "YYYY-MM-DD");
+  let endDate = moment(end, "YYYY-MM-DD");
+
+  console.time("selection");
   for(let i = 0; i < data.length; i++) {
-    if(parseInt(moment(start, "YYYY-MM-DD").format("x"), 10) <= data[i][0] && parseInt(moment(end, "YYYY-MM-DD").format("x"), 10) >= data[i][0]) {
+    if(parseInt(startDate.format("x"), 10) <= data[i][0] && parseInt(endDate.format("x"), 10) >= data[i][0]) {
 
       if(!started){
         started = true;
@@ -20,8 +25,16 @@ window.fillChart = function(data, multiplierSet, axis, symbol, start, end, initi
       selectedData.push([data[i][0], data[i][1] * numShares]);
     }
   }
+  console.timeEnd("selection");
 
   data = selectedData;
+
+  //console.log(endDate.diff(startDate, 'days')/365.2422);
+  let averageGrowthRate = {};
+  averageGrowthRate.name = symbol;
+  averageGrowthRate.growthRate = Math.pow(data[data.length - 1][1]/data[0][1], 1/((endDate.diff(startDate, 'days')/365.2422)));
+  averageGrowthRates.push(averageGrowthRate);
+  console.log(averageGrowthRate);
 
   let series = [{
       name: symbol,
@@ -31,6 +44,7 @@ window.fillChart = function(data, multiplierSet, axis, symbol, start, end, initi
       }
   }]
 
+  console.time("calculation");
   for(let multString of multiplierSet){
     let multiplier = Number(multString);
     let changes = [];
@@ -53,8 +67,9 @@ window.fillChart = function(data, multiplierSet, axis, symbol, start, end, initi
         newdata.push([data[i + 1][0], 0]);
     }
 
-    console.log(data);
-    console.log(newdata);
+
+    //console.log(data);
+    //console.log(newdata);
     series.push({
       name: symbol + ' ' + multiplier + 'X ETF (Simulated)',
       data: newdata,
@@ -62,10 +77,18 @@ window.fillChart = function(data, multiplierSet, axis, symbol, start, end, initi
           valueDecimals: 2
       }
     });
+
+    let newAverageGrowthRate = {};
+    newAverageGrowthRate.name = symbol + ' ' + multiplier + 'X ETF (Simulated)';
+    newAverageGrowthRate.growthRate = Math.pow(newdata[newdata.length - 1][1]/newdata[0][1], 1/((endDate.diff(startDate, 'days')/365.2422)));
+    averageGrowthRates.push(newAverageGrowthRate);
+
   }
+  console.timeEnd("calculation");
 
-  console.log(axis);
+  console.log(averageGrowthRates);
 
+  console.time("render");
   Highcharts.stockChart('myChart', {
         style: {
             fontFamily: 'Roboto'
@@ -91,6 +114,7 @@ window.fillChart = function(data, multiplierSet, axis, symbol, start, end, initi
   });
 
 }
+console.timeEnd("render");
 
 window.getRandomColor = function() {
   var letters = '0123456789ABCDEF';

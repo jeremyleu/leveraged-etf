@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React from 'react';
 import './MultiplierForm.css';
 var moment = require('moment');
 moment().format();
@@ -29,6 +29,7 @@ class MultiplierForm extends React.Component {
     this.symbolChanged = this.symbolChanged.bind(this);
     this.handleChange = this.handleChange.bind(this);
     this.investmentChanged = this.investmentChanged.bind(this);
+    this.handleSubmit = this.handleSubmit.bind(this);
   }
 
   symbolChanged(event) {
@@ -36,8 +37,6 @@ class MultiplierForm extends React.Component {
 
     this.setState({
       symbol: target.value
-    }, function(){
-      this.redrawChart();
     });
 
   }
@@ -55,8 +54,6 @@ class MultiplierForm extends React.Component {
 
     this.setState({
       multiplierSet: multiplierSetCopy
-    }, function(){
-      this.redrawChart();
     });
 
 
@@ -66,8 +63,6 @@ class MultiplierForm extends React.Component {
     var target = event.target;
     this.setState({
       axis: target.value
-    }, function(){
-      this.redrawChart();
     });
 
   }
@@ -84,9 +79,7 @@ class MultiplierForm extends React.Component {
           delete temp.startAfterEndError;
           this.setState({
             errors: temp
-          }, function(){
-            this.redrawChart();
-          })
+          });
         }
         else {
           let temp = this.state.errors;
@@ -99,6 +92,12 @@ class MultiplierForm extends React.Component {
     });
   }
 
+  handleSubmit(event) {
+    event.preventDefault();
+    console.log("hello");
+    this.redrawChart();
+  }
+
   investmentChanged(event) {
     let target = event.target;
     this.setState({
@@ -109,9 +108,7 @@ class MultiplierForm extends React.Component {
         delete temp.invalidInvestmentError;
         this.setState({
           errors: temp
-        }, function(){
-          this.redrawChart();
-        })
+        });
       }
       else {
         let temp = this.state.errors;
@@ -126,19 +123,21 @@ class MultiplierForm extends React.Component {
   }
 
   redrawChart () {
+
     let displayErrors = false;
     for(let error in this.state.errors){
       if(this.state.errors.hasOwnProperty(error))
         displayErrors = true;
     }
     if(!displayErrors){
-      console.log(this.state.symbol);
+      console.time("fetch");
       this.setState({loading: true});
       fetch('/api/history?symbol=' + this.state.symbol)
         .then(res => res.json())
         .then(data => this.setState({data: data}, function(){
           window.fillChart(this.state.data, this.state.multiplierSet, this.state.axis, this.state.symbol, this.state.start, this.state.end, this.state.initialInvestment);
           this.setState({loading: false});
+          console.timeEnd("fetch");
         }));
     }
   }
@@ -299,9 +298,13 @@ class MultiplierForm extends React.Component {
                 </select>
               </div>
             </div>
+            <br />
+
+            <button type = "submit" className = "btn btn-default" onClick = {this.handleSubmit}>Submit</button>
 
 
 
+            <br />
             <br />
 
           </div>

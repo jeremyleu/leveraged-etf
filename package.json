@@ -12,6 +12,7 @@
   "dependencies": {
     "express": "^4.15.3",
     "google-finance": "^0.1.9",
+    "redis": "^2.8.0",
     "request": "^2.81.0",
     "yahoo-finance": "^0.3.2"
   }
