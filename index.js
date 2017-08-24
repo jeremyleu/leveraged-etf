@@ -31,6 +31,7 @@ client.on('connect', function() {
 app.get('/api/history', (req, res) => {
 
   client.get('latest' + req.query.symbol, function(err, reply){
+
     //console.log(reply);
     if(!reply || reply !== moment().format('YYYY-MM-DD')){
       console.time("apiCall " + reply);
@@ -55,10 +56,14 @@ app.get('/api/history', (req, res) => {
           allValues.reverse();
         }
         else{
+          client.get('allValues' + req.query.symbol, function(err, allValuesResponse){
+            allValues = JSON.parse(allValuesResponse);
+          });
           allValues = JSON.parse(reply);
+          quotes.reverse();
           for(let i = 0; i < quotes.length; i++) {
             if(Number(quotes[i].close) > 0)
-              allValues.unshift([parseInt(moment(quotes[i].date, "YYYY-MM-DD").format("x")), Number(quotes[i].close)]);
+              allValues.push([parseInt(moment(quotes[i].date, "YYYY-MM-DD").format("x")), Number(quotes[i].close)]);
           }
         }
         client.set('allValues' + req.query.symbol, JSON.stringify(allValues));
@@ -67,8 +72,8 @@ app.get('/api/history', (req, res) => {
     }
     else{
       console.time("redisCall");
-      client.get('allValues' + req.query.symbol, function(err, reply){
-        res.json(JSON.parse(reply));
+      client.get('allValues' + req.query.symbol, function(err, allValuesResponse){
+        res.json(JSON.parse(allValuesResponse));
       });
       console.timeEnd("redisCall");
     }
