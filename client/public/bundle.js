@@ -7387,6 +7387,7 @@ window.fillChart = function(data, multiplierSet, axis, symbol, start, end, initi
   let startDate = moment(start, "YYYY-MM-DD");
   let endDate = moment(end, "YYYY-MM-DD");
 
+  console.log(data);
   console.time("selection");
   for(let i = 0; i < data.length; i++) {
     if(parseInt(startDate.format("x"), 10) <= data[i][0] && parseInt(endDate.format("x"), 10) >= data[i][0]) {
@@ -7405,6 +7406,7 @@ window.fillChart = function(data, multiplierSet, axis, symbol, start, end, initi
   //console.log(endDate.diff(startDate, 'days')/365.2422);
   let averageGrowthRate = {};
   averageGrowthRate.name = symbol;
+  console.log(data);
   averageGrowthRate.growthRate = Math.pow(data[data.length - 1][1]/data[0][1], 1/((endDate.diff(startDate, 'days')/365.2422)));
   averageGrowthRates.push(averageGrowthRate);
   console.log(averageGrowthRate);

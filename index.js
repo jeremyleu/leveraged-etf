@@ -27,23 +27,25 @@ client.on('connect', function() {
     console.log('connected to redis');
 });
 
+process.env.TZ = "America/New_York";
 
 app.get('/api/history', (req, res) => {
-
   client.get('latest' + req.query.symbol, function(err, reply){
+
+    console.log(reply);
 
     //console.log(reply);
     if(!reply || reply !== moment().format('YYYY-MM-DD')){
       console.time("apiCall " + reply);
       yahooFinance.historical({
         symbol: req.query.symbol,
-        from: reply || '1900-01-01',
+        from: reply || '1950-01-01',
         to: moment().format('YYYY-MM-DD'),
         period: 'd'
         // period: 'd'  // 'd' (daily), 'w' (weekly), 'm' (monthly), 'v' (dividends only)
       }, function (err, quotes) {
         console.timeEnd("apiCall " + reply);
-        client.set('latest' + req.query.symbol, moment().format('YYYY-MM-DD'));
+        //client.set('latest' + req.query.symbol, moment().format('YYYY-MM-DD'));
         console.log('error:', err); // Print the error if one occurred
         //...
         //console.log(quotes);
@@ -53,18 +55,21 @@ app.get('/api/history', (req, res) => {
             if(Number(quotes[i].close) > 0) // bug in yahoo finance where it says NASDAQ closed at 0 on june 30, 2017
               allValues.push([parseInt(moment(quotes[i].date, "YYYY-MM-DD").format("x")), Number(quotes[i].close)]);
           }
+          allValues.shift();
           allValues.reverse();
         }
         else{
           client.get('allValues' + req.query.symbol, function(err, allValuesResponse){
             allValues = JSON.parse(allValuesResponse);
+            quotes.reverse();
+            console.log("quotes is: ");
+            for(let i = 0; i < quotes.length; i++) {
+              if(Number(quotes[i].close) > 0)
+                allValues.push([parseInt(moment(quotes[i].date, "YYYY-MM-DD").format("x")), Number(quotes[i].close)]);
+            }
+            //console.log(allValues.slice(Math.max(allValues.length - 20, 1)));
           });
-          allValues = JSON.parse(reply);
-          quotes.reverse();
-          for(let i = 0; i < quotes.length; i++) {
-            if(Number(quotes[i].close) > 0)
-              allValues.push([parseInt(moment(quotes[i].date, "YYYY-MM-DD").format("x")), Number(quotes[i].close)]);
-          }
+
         }
         client.set('allValues' + req.query.symbol, JSON.stringify(allValues));
         res.json(allValues);
@@ -73,7 +78,9 @@ app.get('/api/history', (req, res) => {
     else{
       console.time("redisCall");
       client.get('allValues' + req.query.symbol, function(err, allValuesResponse){
-        res.json(JSON.parse(allValuesResponse));
+        let allValues = JSON.parse(allValuesResponse);
+        console.log(allValues.slice(Math.max(allValues.length - 20, 1)));
+        res.json(allValues);
       });
       console.timeEnd("redisCall");
     }
