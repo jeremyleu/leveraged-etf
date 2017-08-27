@@ -88,6 +88,14 @@ window.fillChart = function(data, multiplierSet, axis, symbol, start, end, initi
   }
   console.timeEnd("calculation");
 
+  var cagrDiv = document.getElementsByClassName("cagr")[0];
+  cagrDiv.innerHTML = "";
+  for(let i = 0; i < averageGrowthRates.length; i++){
+    console.log(averageGrowthRates[i]);
+    cagrDiv.innerHTML += "<div><strong>" + averageGrowthRates[i].name + "</strong>: " + ((averageGrowthRates[i].growthRate - 1) * 100).toFixed(3) + "%</div>";
+  }
+  console.log(cagrDiv.innerHTML);
+
   console.log(averageGrowthRates);
 
   console.time("render");
@@ -105,7 +113,11 @@ window.fillChart = function(data, multiplierSet, axis, symbol, start, end, initi
         },
 
         title: {
-            text: 'Leveraged ETF Simulation'
+            text: 'Leveraged ETF Simulation',
+            style: {
+              "fontSize": "2em",
+              "fontWeight": "700"
+            }
         },
 
         yAxis: {
@@ -121,7 +133,7 @@ console.timeEnd("render");
 window.getRandomColor = function() {
   var letters = '0123456789ABCDEF';
   var color = '#';
-  for (var i = 0; i < 6; i++) {
+  for (let i = 0; i < 6; i++) {
     color += letters[Math.floor(Math.random() * 16)];
   }
   return color;

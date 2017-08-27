@@ -18,6 +18,10 @@ class Results extends React.Component {
   render() {
     return (
       <div className = "results">
+        <h3>GROWTH RATES</h3>
+        <hr />
+        <div className = "cagr">
+        </div>
       </div>
     )
   }

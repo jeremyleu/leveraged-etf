@@ -200,7 +200,7 @@ class MultiplierForm extends React.Component {
     return (
       <div className = "multiplier-form">
 
-        <h1>OPTIONS</h1>
+        <h3>OPTIONS</h3>
         <hr />
         {this.state.loading ? <div className="alert alert-info" role="alert">Loading...</div> : null}
         {displayErrors ? <div className="alert alert-danger" role="alert">{Object.values(this.state.errors)}</div> : null}
@@ -219,14 +219,14 @@ class MultiplierForm extends React.Component {
             </div>
 
             <div className = "form-label">
-              Initial Investment:
+              Initial Investment ($):
             </div>
             <div className = "form-group row">
               <input type = "text" className = "form-control" onChange = {this.investmentChanged} value = {this.state.initialInvestment} />
             </div>
 
             <div className = "form-label">
-              Multiplier(s):
+              Leverage Multiplier(s):
             </div>
             <div className = "form-group row">
               <div className = "col-md-4">

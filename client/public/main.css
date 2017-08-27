@@ -41,15 +41,19 @@ input, label, select {
 }
 
 .multiplier-form-container {
-  width: 400px;
   z-index: 1;
   position: absolute;
   left: 0;
   top: 10%;
+
+  margin: 30px;
+}
+
+.multiplier-form, .results {
   padding: 30px;
   border-radius: 30px;
   background-color: #eeeeee;
-  margin: 30px;
+  width: 400px;
 }
 
 .content-container {
@@ -83,11 +87,11 @@ input, label, select {
   font-weight: 400;
 }
 
-.multiplier-form h1 {
+h3 {
   font-weight: 700;
 }
 
-.multiplier-form hr {
+hr {
   border-color: #333;
 }
 

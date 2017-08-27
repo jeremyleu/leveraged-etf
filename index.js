@@ -32,9 +32,8 @@ process.env.TZ = "America/New_York";
 app.get('/api/history', (req, res) => {
   client.get('latest' + req.query.symbol, function(err, reply){
 
-    console.log(reply);
-
     //console.log(reply);
+
     if(!reply || reply !== moment().format('YYYY-MM-DD')){
       console.time("apiCall " + reply);
       yahooFinance.historical({
@@ -45,7 +44,7 @@ app.get('/api/history', (req, res) => {
         // period: 'd'  // 'd' (daily), 'w' (weekly), 'm' (monthly), 'v' (dividends only)
       }, function (err, quotes) {
         console.timeEnd("apiCall " + reply);
-        //client.set('latest' + req.query.symbol, moment().format('YYYY-MM-DD'));
+        client.set('latest' + req.query.symbol, moment().format('YYYY-MM-DD'));
         console.log('error:', err); // Print the error if one occurred
         //...
         //console.log(quotes);
@@ -62,7 +61,7 @@ app.get('/api/history', (req, res) => {
           client.get('allValues' + req.query.symbol, function(err, allValuesResponse){
             allValues = JSON.parse(allValuesResponse);
             quotes.reverse();
-            console.log("quotes is: ");
+            //console.log("quotes is: ");
             for(let i = 0; i < quotes.length; i++) {
               if(Number(quotes[i].close) > 0)
                 allValues.push([parseInt(moment(quotes[i].date, "YYYY-MM-DD").format("x")), Number(quotes[i].close)]);
@@ -79,7 +78,7 @@ app.get('/api/history', (req, res) => {
       console.time("redisCall");
       client.get('allValues' + req.query.symbol, function(err, allValuesResponse){
         let allValues = JSON.parse(allValuesResponse);
-        console.log(allValues.slice(Math.max(allValues.length - 20, 1)));
+        //console.log(allValues.slice(Math.max(allValues.length - 20, 1)));
         res.json(allValues);
       });
       console.timeEnd("redisCall");
