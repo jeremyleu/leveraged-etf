@@ -1,6 +1,7 @@
 var Highcharts = require('highcharts/highstock');
 var bootstrap = require('bootstrap');
 var moment = require('moment');
+//const parseDecimalNumber = require('parse-decimal-number');
 moment().format();
 
 //var myChart;
@@ -21,7 +22,7 @@ window.fillChart = function(data, multiplierSet, axis, symbol, start, end, initi
 
       if(!started){
         started = true;
-        numShares = Number(initialInvestment/data[i][1]);
+        numShares = Number((initialInvestment)/data[i][1]);
       }
       selectedData.push([data[i][0], data[i][1] * numShares]);
     }
@@ -88,12 +89,12 @@ window.fillChart = function(data, multiplierSet, axis, symbol, start, end, initi
   }
   console.timeEnd("calculation");
 
-  var cagrDiv = document.getElementsByClassName("cagr")[0];
+  /*var cagrDiv = document.getElementsByClassName("cagr")[0];
   cagrDiv.innerHTML = "";
   for(let i = 0; i < averageGrowthRates.length; i++){
     cagrDiv.innerHTML += "<div><strong>" + averageGrowthRates[i].name + "</strong>: " + ((averageGrowthRates[i].growthRate - 1) * 100).toFixed(3) + "%</div>";
   }
-  console.log(cagrDiv.innerHTML);
+  console.log(cagrDiv.innerHTML);*/
 
   console.log(averageGrowthRates);
 
@@ -130,15 +131,20 @@ window.fillChart = function(data, multiplierSet, axis, symbol, start, end, initi
           itemStyle: {
             font: '700 1.5em Roboto, Calibri, sans-serif'
           }
+        },
+
+        scrollbar: {
+          showFull: false
         }
   });
   for(let i = 0; i < stockChart.series.length; i++){
     stockChart.series[i].name = averageGrowthRates[i].name;
   }
+  console.timeEnd("render");
 }
 
 
-console.timeEnd("render");
+
 
 window.getRandomColor = function() {
   var letters = '0123456789ABCDEF';

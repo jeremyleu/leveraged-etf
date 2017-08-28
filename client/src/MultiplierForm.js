@@ -1,6 +1,7 @@
 import React from 'react';
 import './MultiplierForm.css';
 var moment = require('moment');
+//const parseDecimalNumber = require('parse-decimal-number');
 moment().format();
 
 class MultiplierForm extends React.Component {
@@ -100,8 +101,9 @@ class MultiplierForm extends React.Component {
 
   investmentChanged(event) {
     let target = event.target;
+    console.log(target.value);
     this.setState({
-      initialInvestment: target.value
+      initialInvestment: Number(target.value)
     }, function(){
       if(!(Number.isNaN(Number(target.value))) && Number(target.value) > 0){
         let temp = this.state.errors;
@@ -222,11 +224,11 @@ class MultiplierForm extends React.Component {
               Initial Investment ($):
             </div>
             <div className = "form-group row">
-              <input type = "text" className = "form-control" onChange = {this.investmentChanged} value = {this.state.initialInvestment} />
+              <input type = "text" className = "form-control investment-field" onChange = {this.investmentChanged} value = {this.state.initialInvestment} />
             </div>
 
             <div className = "form-label">
-              Leverage Multiplier(s):
+              Daily Leverage Multiplier(s):
             </div>
             <div className = "form-group row">
               <div className = "col-md-4">

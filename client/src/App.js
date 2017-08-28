@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import MultiplierForm from './MultiplierForm';
-import Results from './Results';
+//import Results from './Results';
 import './App.css';
 
 class App extends Component {
@@ -32,7 +32,6 @@ class App extends Component {
           <div className = "multiplier-form-container">
             <MultiplierForm />
             <br />
-            <Results />
           </div>
           <br />
           <div className = "chart-container">
