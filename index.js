@@ -80,7 +80,7 @@ app.get('/api/history', (req, res) => {
       console.time("redisCall");
       client.get('allValues' + req.query.symbol, function(err, allValuesResponse){
         let allValues = JSON.parse(allValuesResponse);
-        console.log(allValues.slice(Math.max(allValues.length - 20, 1)));
+        //console.log(allValues.slice(Math.max(allValues.length - 20, 1)));
         res.json(allValues);
       });
       console.timeEnd("redisCall");

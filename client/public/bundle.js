@@ -7412,7 +7412,7 @@ window.fillChart = function(data, multiplierSet, axis, symbol, start, end, initi
   console.log(averageGrowthRate);
 
   let series = [{
-      name: symbol,
+      name: symbol + ' | CAGR: ' + ((averageGrowthRate.growthRate - 1) * 100).toFixed(3) + '%',
       data: data,
       tooltip: {
           valueDecimals: 2
@@ -7442,21 +7442,21 @@ window.fillChart = function(data, multiplierSet, axis, symbol, start, end, initi
         newdata.push([data[i + 1][0], 0]);
     }
 
-
+    let newAverageGrowthRate = {};
+    newAverageGrowthRate.name = symbol + ' ' + multiplier + 'X ETF (Simulated)';
+    newAverageGrowthRate.growthRate = Math.pow(newdata[newdata.length - 1][1]/newdata[0][1], 1/((endDate.diff(startDate, 'days')/365.2422)));
+    averageGrowthRates.push(newAverageGrowthRate);
     //console.log(data);
     //console.log(newdata);
     series.push({
-      name: symbol + ' ' + multiplier + 'X ETF (Simulated)',
+      name: symbol + ' ' + multiplier + 'X ETF (Simulated) | CAGR: ' + ((newAverageGrowthRate.growthRate - 1) * 100).toFixed(3) + '%',
       data: newdata,
       tooltip: {
           valueDecimals: 2
       }
     });
 
-    let newAverageGrowthRate = {};
-    newAverageGrowthRate.name = symbol + ' ' + multiplier + 'X ETF (Simulated)';
-    newAverageGrowthRate.growthRate = Math.pow(newdata[newdata.length - 1][1]/newdata[0][1], 1/((endDate.diff(startDate, 'days')/365.2422)));
-    averageGrowthRates.push(newAverageGrowthRate);
+
 
   }
   console.timeEnd("calculation");
@@ -7486,7 +7486,7 @@ window.fillChart = function(data, multiplierSet, axis, symbol, start, end, initi
         },
 
         title: {
-            text: 'Leveraged ETF Simulation',
+            text: 'LEVERAGED ETF SIMULATION',
             style: {
               "fontSize": "2em",
               "fontWeight": "700"
@@ -7497,7 +7497,15 @@ window.fillChart = function(data, multiplierSet, axis, symbol, start, end, initi
           type: axis,
         },
 
-        series: series
+        series: series,
+
+        legend: {
+          enabled: true,
+          itemStyle: {
+            font: '1.5em Roboto, Calibri, sans-serif',
+            width: 350
+          }
+        }
   });
 
 }
