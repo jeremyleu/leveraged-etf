@@ -3,7 +3,7 @@ var bootstrap = require('bootstrap');
 var moment = require('moment');
 moment().format();
 
-var myChart;
+//var myChart;
 
 window.fillChart = function(data, multiplierSet, axis, symbol, start, end, initialInvestment) {
 
@@ -39,7 +39,7 @@ window.fillChart = function(data, multiplierSet, axis, symbol, start, end, initi
   console.log(averageGrowthRate);
 
   let series = [{
-      name: symbol + ' | CAGR: ' + ((averageGrowthRate.growthRate - 1) * 100).toFixed(3) + '%',
+      name: averageGrowthRate.name + ': ' + ((averageGrowthRate.growthRate - 1) * 100).toFixed(3) + '%', //symbol + ': ' + ((averageGrowthRate.growthRate - 1) * 100).toFixed(3) + '%',
       data: data,
       tooltip: {
           valueDecimals: 2
@@ -76,7 +76,7 @@ window.fillChart = function(data, multiplierSet, axis, symbol, start, end, initi
     //console.log(data);
     //console.log(newdata);
     series.push({
-      name: symbol + ' ' + multiplier + 'X ETF (Simulated) | CAGR: ' + ((newAverageGrowthRate.growthRate - 1) * 100).toFixed(3) + '%',
+      name: newAverageGrowthRate.name + ': ' +  ((newAverageGrowthRate.growthRate - 1) * 100).toFixed(3) + '%', //symbol + ' ' + multiplier + 'X ETF (Simulated): ' + ((newAverageGrowthRate.growthRate - 1) * 100).toFixed(3) + '%',
       data: newdata,
       tooltip: {
           valueDecimals: 2
@@ -91,7 +91,6 @@ window.fillChart = function(data, multiplierSet, axis, symbol, start, end, initi
   var cagrDiv = document.getElementsByClassName("cagr")[0];
   cagrDiv.innerHTML = "";
   for(let i = 0; i < averageGrowthRates.length; i++){
-    console.log(averageGrowthRates[i]);
     cagrDiv.innerHTML += "<div><strong>" + averageGrowthRates[i].name + "</strong>: " + ((averageGrowthRates[i].growthRate - 1) * 100).toFixed(3) + "%</div>";
   }
   console.log(cagrDiv.innerHTML);
@@ -99,7 +98,7 @@ window.fillChart = function(data, multiplierSet, axis, symbol, start, end, initi
   console.log(averageGrowthRates);
 
   console.time("render");
-  Highcharts.stockChart('myChart', {
+  let stockChart = Highcharts.stockChart('myChart', {
         style: {
             fontFamily: 'Roboto'
         },
@@ -133,8 +132,12 @@ window.fillChart = function(data, multiplierSet, axis, symbol, start, end, initi
           }
         }
   });
-
+  for(let i = 0; i < stockChart.series.length; i++){
+    stockChart.series[i].name = averageGrowthRates[i].name;
+  }
 }
+
+
 console.timeEnd("render");
 
 window.getRandomColor = function() {
