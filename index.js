@@ -32,7 +32,7 @@ process.env.TZ = "America/New_York";
 app.get('/api/history', (req, res) => {
   client.get('latest' + req.query.symbol, function(err, reply){
 
-    //console.log(reply);
+    console.log(reply);
 
     if(!reply || reply !== moment().format('YYYY-MM-DD')){
       console.time("apiCall " + reply);
@@ -56,29 +56,31 @@ app.get('/api/history', (req, res) => {
           }
           allValues.shift();
           allValues.reverse();
+          client.set('allValues' + req.query.symbol, JSON.stringify(allValues));
+          res.json(allValues);
         }
         else{
           client.get('allValues' + req.query.symbol, function(err, allValuesResponse){
             allValues = JSON.parse(allValuesResponse);
             quotes.reverse();
-            //console.log("quotes is: ");
+
             for(let i = 0; i < quotes.length; i++) {
               if(Number(quotes[i].close) > 0)
                 allValues.push([parseInt(moment(quotes[i].date, "YYYY-MM-DD").format("x")), Number(quotes[i].close)]);
             }
-            //console.log(allValues.slice(Math.max(allValues.length - 20, 1)));
+            client.set('allValues' + req.query.symbol, JSON.stringify(allValues));
+            res.json(allValues);
           });
 
         }
-        client.set('allValues' + req.query.symbol, JSON.stringify(allValues));
-        res.json(allValues);
+
       });
     }
     else{
       console.time("redisCall");
       client.get('allValues' + req.query.symbol, function(err, allValuesResponse){
         let allValues = JSON.parse(allValuesResponse);
-        //console.log(allValues.slice(Math.max(allValues.length - 20, 1)));
+        console.log(allValues.slice(Math.max(allValues.length - 20, 1)));
         res.json(allValues);
       });
       console.timeEnd("redisCall");
