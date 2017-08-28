@@ -129,8 +129,7 @@ window.fillChart = function(data, multiplierSet, axis, symbol, start, end, initi
         legend: {
           enabled: true,
           itemStyle: {
-            font: '1.5em Roboto, Calibri, sans-serif',
-            width: 350
+            font: '700 1.5em Roboto, Calibri, sans-serif'
           }
         }
   });

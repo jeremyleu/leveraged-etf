@@ -5,10 +5,7 @@ const redis = require('redis');
 var moment = require('moment');
 var fs = require('fs');
 var yahooFinance = require('yahoo-finance');
-//const datesBefore2000 = require('./resources/datesbefore2000.json');
-//const valuesBefore2000 = require('./resources/valuesbefore2000.json')
 
-const before2000 = require('./resources/before2000.json')
 const app = express();
 
 // Serve static files from the React app
@@ -27,7 +24,7 @@ client.on('connect', function() {
     console.log('connected to redis');
 });
 
-process.env.TZ = "America/New_York";
+//process.env.TZ = "America/New_York";
 
 app.get('/api/history', (req, res) => {
   client.get('latest' + req.query.symbol, function(err, reply){
@@ -87,23 +84,18 @@ app.get('/api/history', (req, res) => {
     }
   });
 
-
-
 });
 
 app.use('/js', express.static(__dirname + '/client/node_modules/bootstrap/dist/js')); // redirect bootstrap JS
 app.use('/js', express.static(__dirname + '/client/node_modules/jquery/dist')); // redirect JS jQuery
 app.use('/css', express.static(__dirname + '/client/node_modules/bootstrap/dist/css')); // redirect CSS bootstrap
 
-// The "catchall" handler: for any request that doesn't
-// match one above, send back React's index.html file.
+
 app.get('*', (req, res) => {
   res.sendFile(path.join(__dirname+'/client/build/index.html'));
 });
 
-
-
 const port = process.env.PORT || 5000;
 app.listen(port);
 
-console.log(`Password generator listening on ${port}`);
+console.log(`Server listening on ${port}`);
